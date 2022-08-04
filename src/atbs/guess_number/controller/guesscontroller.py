@@ -1,6 +1,7 @@
 import random
 
 from atbs.guess_number.controller.controllerConfig import ControllerConfig
+from atbs.guess_number.entity.guessResult import GuessResult
 from atbs.guess_number.entity.guessingGameEntity import GuessingGameEntity
 from atbs.guess_number.exception.validationexception import ValidationException
 from atbs.guess_number.handler.guesshandler import GuessHandler
@@ -22,9 +23,9 @@ class GuessingGameController:
         )
         self.handler.setup_handler(new_game)
 
-    def guess(self, value: str):
+    def guess(self, value: str) -> GuessResult:
         """  """
-        self.handler.handle(value)
+        return self.handler.handle(value)
 
 
 class GuessingGameControllerConsole(GuessingGameController):
@@ -45,7 +46,9 @@ class GuessingGameControllerConsole(GuessingGameController):
         self.start_new_game()
         while True:
             try:
-                if self.guess(input(f"Guess a number between {self.config.min} and {self.config.max}: ")):
+                result = self.guess(input(f"Guess a number between {self.config.min} and {self.config.max}: "))
+                print(result.message, end="")
+                if result.correct:
                     return
             except ValidationException as e:
                 print(e)

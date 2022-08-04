@@ -13,14 +13,14 @@ class AdvancedGuessHandler(GuessHandler):
         validated_guess = self.validate(guess)
         res = self.process(validated_guess)
 
-        if not res:
+        if not res.correct:
             # update guessing limits according to current guess
             if self.game.target > validated_guess >= self.lowest:
                 self.lowest = validated_guess + 1
             if self.highest >= validated_guess > self.game.target:
                 self.highest = validated_guess - 1
 
-            print(f"Next guess recommended: {self.get_optimal_guess()}")
+            res.message += f"Next guess recommended: {self.get_optimal_guess()}\n"
 
         return res
 

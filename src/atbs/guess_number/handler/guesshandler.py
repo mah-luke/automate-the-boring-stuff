@@ -1,3 +1,4 @@
+from atbs.guess_number.entity.guessResult import GuessResult
 from atbs.guess_number.entity.guessingGameEntity import GuessingGameEntity
 from atbs.guess_number.exception.validationexception import ValidationException
 
@@ -7,20 +8,22 @@ class GuessHandler:
     def __init__(self):
         self.game = None
 
-    def handle(self, guess) -> bool:
+    def handle(self, guess) -> GuessResult:
         return self.process(self.validate(guess))
 
-    def process(self, validated_guess) -> (bool, str):
-        msg = ""
+    def process(self, validated_guess) -> GuessResult:
+        result = GuessResult()
         if validated_guess == self.game.target:
-            msg = "Correct number guessed"
-            return True
-        elif validated_guess < self.game.target:
-            msg = "Too low"
-        elif validated_guess > self.game.target:
-            msg = "Too high"
+            result.message = "Correct number guessed\n"
+            result.correct = True
+        else:
+            if validated_guess < self.game.target:
+                result.message = "Too low\n"
+            elif validated_guess > self.game.target:
+                result.message = "Too high\n"
+            result.correct = False
 
-        return False
+        return result
 
     def validate(self, guess: str):
         try:
